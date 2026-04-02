@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Barzani Wisdom | Professional Quote Manager</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+      background: #faf3e4;
+      background-image: radial-gradient(circle at 10% 30%, rgba(200, 170, 120, 0.08) 0%, rgba(160, 130, 80, 0.02) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.2rem;
+    }
+
+    /* main container */
+    .swipe-container {
+      max-width: 780px;
+      width: 100%;
+      margin: 0.5rem auto;
+      position: relative;
+      border-radius: 2.2rem;
+      background: transparent;
+    }
+
+    /* quote card */
+    .quote-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease;
+    }
+
+    /* background image 40% opacity */
+    .card-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center 25%;
+      background-repeat: no-repeat;
+      opacity: 0.4;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 2rem;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      padding: 2.5rem 2rem 2rem 2rem;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      min-height: 500px;
+    }
+
+    .quote-text-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 0.5rem 0 1rem 0;
+      gap: 0.25rem;
+    }
+
+    .original-quote {
+      font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, system-ui;
+      font-size: 1.45rem;
+      font-weight: 600;
+      line-height: 1.65;
+      text-align: right;
+      direction: rtl;
+      color: #1f2c1c;
+      background: rgba(255, 252, 240, 0.85);
+      padding: 1.2rem 1.5rem;
+      border-radius: 1.8rem;
+      margin-bottom: 0.25rem;
+      border-right: 5px solid #c6a15b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(2px);
+    }
+
+    .translation {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #2b3a22;
+      line-height: 1.5;
+      background: rgba(255, 250, 235, 0.7);
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      letter-spacing: -0.2px;
+      backdrop-filter: blur(2px);
+      border-left: 3px solid #e2c48b;
+      margin-top: 0;
+    }
+
+    .translation i {
+      color: #b48c48;
+      margin-right: 8px;
+    }
+
+    .author-kurdish-only {
+      margin-top: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(180, 140, 72, 0.35);
+      text-align: right;
+      direction: rtl;
+    }
+    .kurdish-name {
+      font-family: 'Noto Sans Arabic', 'Segoe UI', system-ui;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #7a562c;
+      margin-bottom: 4px;
+    }
+    .kurdish-history {
+      font-family: 'Noto Sans Arabic', 'Segoe UI', system-ui;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #9c784c;
+      opacity: 0.85;
+    }
+    .quote-icon {
+      align-self: flex-start;
+      font-size: 2rem;
+      color: #dbb16e;
+      opacity: 0.6;
+      margin-bottom: 0.5rem;
+    }
+
+    /* navigation */
+    .nav-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .nav-btn {
+      background: #fff6ea;
+      border: none;
+      width: 56px;
+      height: 56px;
+      border-radius: 40px;
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+      color: #8b653c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-btn:hover {
+      background: #f2e2cc;
+      transform: scale(1.03);
+    }
+    .counter {
+      font-family: monospace;
+      font-weight: 600;
+      background: #e5d5ba80;
+      backdrop-filter: blur(4px);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      color: #4d3a22;
+    }
+    .swipe-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 1rem;
+      color: #b4946a;
+    }
+    .dots-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #dbcbaa;
+      border-radius: 10px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .dot.active {
+      width: 28px;
+      background: #9c784c;
+    }
+
+    /* PROFESSIONAL ADMIN PANEL */
+    .admin-panel {
+      max-width: 780px;
+      width: 100%;
+      margin: 1.5rem auto;
+      background: #ffffff;
+      border-radius: 1.8rem;
+      padding: 1.5rem;
+      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+      border: 1px solid #e9dbbc;
+      display: none;
+    }
+    .admin-panel.visible {
+      display: block;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f0e2ce;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .admin-header h3 {
+      font-size: 1.3rem;
+      color: #5a3e1f;
+      font-family: 'Noto Sans Arabic', system-ui;
+    }
+    .admin-header h3 i {
+      margin-left: 8px;
+      color: #b48c48;
+    }
+    .lock-status {
+      font-size: 0.75rem;
+      background: #e9ddc3;
+      padding: 4px 10px;
+      border-radius: 30px;
+      color: #6b4c28;
+    }
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .admin-field {
+      margin-bottom: 1rem;
+    }
+    .admin-field.full-width {
+      grid-column: span 2;
+    }
+    .admin-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #8b653c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+    .admin-field input, .admin-field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1.5px solid #e2cfaa;
+      background: #fefcf7;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .admin-field input:focus, .admin-field textarea:focus {
+      outline: none;
+      border-color: #c6a15b;
+      box-shadow: 0 0 0 2px rgba(198, 161, 91, 0.2);
+    }
+    .admin-field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    /* image upload area */
+    .image-upload-area {
+      background: #fef8ef;
+      border-radius: 1rem;
+      padding: 0.8rem;
+      border: 1px dashed #dbbc87;
+      text-align: center;
+    }
+    .image-preview {
+      width: 100%;
+      height: 140px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 1rem;
+      margin-bottom: 8px;
+      background-color: #e9ddc3;
+      background-image: url('https://picsum.photos/id/30/300/200?grayscale');
+    }
+    .image-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .img-btn {
+      background: #e9ddc3;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .img-btn:hover {
+      background: #dbbc87;
+    }
+    .admin-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 1.2rem;
+    }
+    .admin-btn {
+      background: #dbbc87;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #2c2418;
+      font-size: 0.85rem;
+    }
+    .admin-btn-primary {
+      background: #8b653c;
+      color: white;
+    }
+    .admin-btn-danger {
+      background: #c97e5a;
+      color: white;
+    }
+    .quote-list {
+      margin-top: 1.5rem;
+      max-height: 280px;
+      overflow-y: auto;
+      border-top: 1px solid #eedbba;
+      padding-top: 1rem;
+    }
+    .quote-item {
+      background: #fefaf2;
+      border-radius: 1rem;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      transition: 0.1s;
+      cursor: pointer;
+    }
+    .quote-item:hover {
+      background: #f7efdf;
+    }
+    .quote-item span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 65%;
+      direction: rtl;
+    }
+    .quote-item button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: 8px;
+      color: #9c6e3e;
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #b68f58;
+    }
+    @media (max-width: 680px) {
+      .admin-grid { grid-template-columns: 1fr; }
+      .admin-field.full-width { grid-column: span 1; }
+      .card-content { padding: 1.6rem; min-height: 460px; }
+      .original-quote { font-size: 1.15rem; }
+    }
+    @keyframes gentleFade {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .quote-card { animation: gentleFade 0.35s ease-out; }
+  </style>
+</head>
+<body>
+
+<div class="swipe-container">
+  <div id="quoteCardRoot"></div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+    <span class="counter" id="counter">1 / 5</span>
+    <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <div class="dots-indicator" id="dotsContainer"></div>
+  <div class="swipe-hint"><i class="fas fa-hand-peace"></i> swipe or click arrows</div>
+</div>
+
+<!-- PROFESSIONAL ADMIN PANEL (hidden via hash #admin or #rashid + PIN 1474) -->
+<div id="adminPanel" class="admin-panel">
+  <div class="admin-header">
+    <h3><i class="fas fa-crown"></i> به‌ڕێوه‌بهرایه‌تی پیشه‌کی | Dashboard</h3>
+    <div class="lock-status" id="lockStatusBadge"><i class="fas fa-lock"></i> Admin Locked</div>
+  </div>
+  <div class="admin-grid">
+    <div class="admin-field">
+      <label><i class="fas fa-user"></i> ناوی کوردی (Kurdish Name)</label>
+      <input type="text" id="adminName" placeholder="مەسعوود بارزانی">
+    </div>
+    <div class="admin-field">
+      <label><i class="fas fa-history"></i> مێژوو / نازناو (Title)</label>
+      <input type="text" id="adminHistory" placeholder="سەرۆکی پێشووی هەرێمی کوردستان">
+    </div>
+    <div class="admin-field full-width">
+      <label><i class="fas fa-quote-right"></i> وتە بە کوردی (Kurdish Quote)</label>
+      <textarea id="adminKurdishQuote" rows="3" placeholder="..."></textarea>
+    </div>
+    <div class="admin-field full-width">
+      <label><i class="fas fa-language"></i> واتا بە ئینگلیزی (English Translation)</label>
+      <textarea id="adminEnglishQuote" rows="2" placeholder="English translation..."></textarea>
+    </div>
+    <div class="admin-field full-width">
+      <label><i class="fas fa-image"></i> وێنەی کەسەکە (Person Image) - upload or URL</label>
+      <div class="image-upload-area">
+        <div id="imagePreview" class="image-preview" style="background-image: url('https://picsum.photos/id/30/400/300?grayscale');"></div>
+        <div class="image-buttons">
+          <input type="file" id="imageUploadInput" accept="image/jpeg, image/png, image/jpg, image/webp" style="display: none;">
+          <button class="img-btn" id="uploadImageBtn"><i class="fas fa-upload"></i> Upload Photo</button>
+          <button class="img-btn" id="urlImageBtn"><i class="fas fa-link"></i> Use URL</button>
+        </div>
+        <input type="text" id="imageUrlInput" placeholder="Or paste image URL directly..." style="width: 100%; margin-top: 8px; font-size: 0.7rem;">
+        <small style="color:#a28555;">Recommended: portrait style, high quality. Custom uploads are stored locally.</small>
+      </div>
+    </div>
+  </div>
+  <div class="admin-buttons">
+    <button class="admin-btn" id="addQuoteBtn"><i class="fas fa-save"></i> زیادکردن / نوێکردنەوە</button>
+    <button class="admin-btn admin-btn-danger" id="resetDefaultBtn"><i class="fas fa-undo-alt"></i> گەڕاندنەوەی بنەڕەت</button>
+  </div>
+  <div class="quote-list" id="quoteListContainer">
+    <!-- quote items will appear here -->
+  </div>
+  <p style="font-size: 0.65rem; text-align:center; margin-top:12px;"><i class="fas fa-info-circle"></i> کلیک لەسەر هەر وتەیەک بکە بۆ بارکردنی لە فۆڕم و دەستکاری</p>
+</div>
+<div class="footer-note">
+  <i class="fas fa-feather-alt"></i> وتەکانی بارزانی — دانایی بە ڕێز
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // PROFESSIONAL ADMIN: full image management (upload or URL)
+  // PIN: 1474, URL hash: #admin or #rashid
+  // Each quote stores image as dataURL (if uploaded) or external URL.
+  // --------------------------------------------------------------
+  
+  let quotesData = [
+    { id: "q0", originalText: "هنگۆ بۆ خۆ هێفكەنە چاكێت ئێكو دو، هەكە هەنگۆ هێفكەر چاكێت ئێك چاكى دێل هەنگۆ زێدەبى، هەكە هەنگۆ هێفكەر خرابێت ئێكو دو خرابی دێل هەنگۆ زێدەبى.", translationText: "If you strive for good, goodness will come to you; but if you cause harm, evil will follow you.", kurdishName: "شێخ احمد بارزانی", kurdishHistory: "ڕابەر و شەڕڤانی خەباتی کوردستان", imageUrl: "https://picsum.photos/id/20/800/700?grayscale" },
+    { id: "q1", originalText: "بەرەی ڕزگاریی کوردستان بە هێز و یەکێتی بەهێز دەبێت. ئێمە ڕێگای خۆمان هەڵدەبژێرین و نابێ کەس بە زۆر ڕێگای پێ بڵێت.", translationText: "The Kurdish liberation front grows stronger through unity and power.", kurdishName: "مەلا مستەفا بارزانی", kurdishHistory: "باوکی شۆڕشی کوردستان", imageUrl: "https://picsum.photos/id/26/800/700?grayscale" },
+    { id: "q2", originalText: "هەر کەسێک بۆ خەباتی کوردستان بڕوات، ڕێز و شانازی پێدەبەخشین. یەکێتی و برادەری ڕزگاریمان پێ دەست دەکەوێت.", translationText: "Whoever dedicates themselves to the struggle of Kurdistan, we grant them honor and pride.", kurdishName: "مەسعوود بارزانی", kurdishHistory: "سەرۆکی پێشووی هەرێمی کوردستان", imageUrl: "https://picsum.photos/id/30/800/700?grayscale" },
+    { id: "q3", originalText: "به پاره‌رده و زانین نه‌ته‌وه به‌هیژ ده‌بیت و کوردستان ده‌گاته ئامانجه‌کانی. خزمه‌ت به گه‌ل کردن پیروزترین کاره.", translationText: "Through education and knowledge, the nation becomes strong and Kurdistan reaches its goals.", kurdishName: "ئیدریس بارزانی", kurdishHistory: "مێژوونووس و ڕابەری سیاسی", imageUrl: "https://picsum.photos/id/38/800/700?grayscale" },
+    { id: "q4", originalText: "چیاکان ئازادیمانن، نابێ بە هیچ نرخێک واز له خاک بێنین. خه‌بات به‌بێ بیروباوەڕ ڕێگایەکی ونبووە.", translationText: "The mountains are our freedom; we must never surrender the land at any price. Struggle without belief is a lost path.", kurdishName: "عوبەیدوڵڵا بارزانی", kurdishHistory: "ڕابەری مێژوویی بارزان", imageUrl: "https://picsum.photos/id/42/800/700?grayscale" }
+  ];
+  
+  let currentIndex = 0;
+  let adminUnlocked = false;
+  let editModeId = null;
+  let currentImageData = ""; // store base64 or URL for editing preview
+  
+  // DOM elements
+  const rootContainer = document.getElementById('quoteCardRoot');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counterSpan = document.getElementById('counter');
+  const dotsSpan = document.getElementById('dotsContainer');
+  const adminPanelDiv = document.getElementById('adminPanel');
+  const lockStatusBadge = document.getElementById('lockStatusBadge');
+  const adminName = document.getElementById('adminName');
+  const adminHistory = document.getElementById('adminHistory');
+  const adminKurdishQuote = document.getElementById('adminKurdishQuote');
+  const adminEnglishQuote = document.getElementById('adminEnglishQuote');
+  const imagePreviewDiv = document.getElementById('imagePreview');
+  const imageUrlInput = document.getElementById('imageUrlInput');
+  const uploadImageBtn = document.getElementById('uploadImageBtn');
+  const imageUploadInput = document.getElementById('imageUploadInput');
+  const urlImageBtn = document.getElementById('urlImageBtn');
+  const addQuoteBtn = document.getElementById('addQuoteBtn');
+  const resetDefaultBtn = document.getElementById('resetDefaultBtn');
+  const quoteListContainer = document.getElementById('quoteListContainer');
+  
+  // Helper: render current quote card with dynamic image
+  function renderCurrentCard() {
+    if (!rootContainer || quotesData.length === 0) return;
+    if (currentIndex >= quotesData.length) currentIndex = quotesData.length - 1;
+    if (currentIndex < 0) currentIndex = 0;
+    const data = quotesData[currentIndex];
+    const card = document.createElement('div');
+    card.className = 'quote-card';
+    const bgDiv = document.createElement('div');
+    bgDiv.className = 'card-bg-image';
+    bgDiv.style.backgroundImage = `url('${data.imageUrl}')`;
+    bgDiv.style.backgroundSize = 'cover';
+    bgDiv.style.backgroundPosition = 'center 30%';
+    bgDiv.style.opacity = '0.4';
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'card-content';
+    contentDiv.innerHTML = `
+      <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+      <div class="quote-text-wrapper">
+        <div class="original-quote">${escapeHtml(data.originalText)}</div>
+        <div class="translation"><i class="fas fa-globe-asia"></i> ${escapeHtml(data.translationText)}</div>
+      </div>
+      <div class="author-kurdish-only">
+        <div class="kurdish-name">${escapeHtml(data.kurdishName)}</div>
+        <div class="kurdish-history">${escapeHtml(data.kurdishHistory)}</div>
+      </div>
+    `;
+    card.appendChild(bgDiv);
+    card.appendChild(contentDiv);
+    rootContainer.innerHTML = '';
+    rootContainer.appendChild(card);
+    updateCounterAndDots();
+  }
+  
+  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+  
+  function updateCounterAndDots() {
+    if (counterSpan) counterSpan.innerText = `${quotesData.length ? currentIndex+1 : 0} / ${quotesData.length}`;
+    if (dotsSpan) {
+      dotsSpan.innerHTML = '';
+      for (let i = 0; i < quotesData.length; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        if (i === currentIndex) dot.classList.add('active');
+        dot.addEventListener('click', () => { if (i !== currentIndex) { currentIndex = i; renderCurrentCard(); } });
+        dotsSpan.appendChild(dot);
+      }
+    }
+  }
+  
+  function goToNext() { if (currentIndex + 1 < quotesData.length) { currentIndex++; renderCurrentCard(); } }
+  function goToPrev() { if (currentIndex - 1 >= 0) { currentIndex--; renderCurrentCard(); } }
+  
+  function refreshUI() { renderCurrentCard(); if(adminUnlocked) renderQuoteList(); }
+  
+  function renderQuoteList() {
+    if (!quoteListContainer || !adminUnlocked) return;
+    quoteListContainer.innerHTML = '';
+    quotesData.forEach((q, idx) => {
+      const div = document.createElement('div');
+      div.className = 'quote-item';
+      div.innerHTML = `<span><strong>${q.kurdishName}</strong> : ${q.originalText.substring(0, 45)}...</span>
+                      <div><button class="edit-quote-btn" data-idx="${idx}"><i class="fas fa-edit"></i></button>
+                      <button class="delete-quote-btn" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button></div>`;
+      quoteListContainer.appendChild(div);
+    });
+    document.querySelectorAll('.edit-quote-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { const idx = parseInt(btn.getAttribute('data-idx')); loadQuoteToForm(idx); });
+    });
+    document.querySelectorAll('.delete-quote-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { 
+        const idx = parseInt(btn.getAttribute('data-idx'));
+        if (confirm('سڕینەوەی ئەم وتەیە؟')) { quotesData.splice(idx, 1); if (currentIndex >= quotesData.length) currentIndex = Math.max(0, quotesData.length-1); refreshUI(); }
+      });
+    });
+  }
+  
+  function loadQuoteToForm(index) {
+    const q = quotesData[index];
+    adminName.value = q.kurdishName;
+    adminHistory.value = q.kurdishHistory;
+    adminKurdishQuote.value = q.originalText;
+    adminEnglishQuote.value = q.translationText;
+    imagePreviewDiv.style.backgroundImage = `url('${q.imageUrl}')`;
+    imageUrlInput.value = q.imageUrl;
+    currentImageData = q.imageUrl;
+    editModeId = index;
+    addQuoteBtn.innerText = 'نوێکردنەوەی وتە (Update)';
+  }
+  
+  function resetForm() {
+    adminName.value = ''; adminHistory.value = ''; adminKurdishQuote.value = ''; adminEnglishQuote.value = '';
+    imagePreviewDiv.style.backgroundImage = "url('https://picsum.photos/id/30/400/300?grayscale')";
+    imageUrlInput.value = '';
+    currentImageData = "https://picsum.photos/id/30/400/300?grayscale";
+    editModeId = null;
+    addQuoteBtn.innerText = 'زیادکردنی وتە';
+  }
+  
+  function updateImagePreview(url) { imagePreviewDiv.style.backgroundImage = `url('${url}')`; currentImageData = url; imageUrlInput.value = url; }
+  
+  uploadImageBtn.addEventListener('click', () => imageUploadInput.click());
+  imageUploadInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file && (file.type.startsWith('image/'))) {
+      const reader = new FileReader();
+      reader.onload = (ev) => { const dataUrl = ev.target.result; updateImagePreview(dataUrl); };
+      reader.readAsDataURL(file);
+    } else alert('Please select an image file');
+  });
+  urlImageBtn.addEventListener('click', () => {
+    let url = prompt('Enter image URL (direct link):', currentImageData);
+    if (url) updateImagePreview(url);
+  });
+  imageUrlInput.addEventListener('change', () => { if(imageUrlInput.value) updateImagePreview(imageUrlInput.value); });
+  
+  function saveQuoteFromForm() {
+    if (!adminUnlocked) { alert("Access denied."); return; }
+    const name = adminName.value.trim();
+    const history = adminHistory.value.trim();
+    const kurdText = adminKurdishQuote.value.trim();
+    const engText = adminEnglishQuote.value.trim();
+    if (!name || !kurdText || !engText) { alert('تکایە ناو و وتە و واتا پڕ بکەوە'); return; }
+    const finalImage = currentImageData || "https://picsum.photos/id/30/800/700?grayscale";
+    const newQuote = { id: Date.now().toString(), originalText: kurdText, translationText: engText, kurdishName: name, kurdishHistory: history || 'ڕابەر', imageUrl: finalImage };
+    if (editModeId !== null && editModeId >= 0 && editModeId < quotesData.length) { quotesData[editModeId] = newQuote; editModeId = null; }
+    else { quotesData.push(newQuote); }
+    if (quotesData.length === 1) currentIndex = 0;
+    resetForm(); refreshUI();
+  }
+  
+  function resetToDefault() {
+    if (!adminUnlocked) return;
+    if (confirm('گەڕاندنەوەی هەموو وتەکان بۆ دۆخی بنەڕەت؟')) {
+      quotesData = [
+        { id:"q0", originalText:"هنگۆ بۆ خۆ هێفكەنە چاكێت ئێكو دو، هەكە هەنگۆ هێفكەر چاكێت ئێك چاكى دێل هەنگۆ زێدەبى، هەكە هەنگۆ هێفكەر خرابێت ئێكو دو خرابی دێل هەنگۆ زێدەبى.", translationText:"If you strive for good, goodness will come to you; but if you cause harm, evil will follow you.", kurdishName:"شێخ احمد بارزانی", kurdishHistory:"ڕابەر و شەڕڤانی خەباتی کوردستان", imageUrl:"https://picsum.photos/id/20/800/700?grayscale" },
+        { id:"q1", originalText:"بەرەی ڕزگاریی کوردستان بە هێز و یەکێتی بەهێز دەبێت. ئێمە ڕێگای خۆمان هەڵدەبژێرین و نابێ کەس بە زۆر ڕێگای پێ بڵێت.", translationText:"The Kurdish liberation front grows stronger through unity and power.", kurdishName:"مەلا مستەفا بارزانی", kurdishHistory:"باوکی شۆڕشی کوردستان", imageUrl:"https://picsum.photos/id/26/800/700?grayscale" },
+        { id:"q2", originalText:"هەر کەسێک بۆ خەباتی کوردستان بڕوات، ڕێز و شانازی پێدەبەخشین. یەکێتی و برادەری ڕزگاریمان پێ دەست دەکەوێت.", translationText:"Whoever dedicates themselves to the struggle of Kurdistan, we grant them honor and pride.", kurdishName:"مەسعوود بارزانی", kurdishHistory:"سەرۆکی پێشووی هەرێمی کوردستان", imageUrl:"https://picsum.photos/id/30/800/700?grayscale" },
+        { id:"q3", originalText:"به پاره‌رده و زانین نه‌ته‌وه به‌هیژ ده‌بیت و کوردستان ده‌گاته ئامانجه‌کانی. خزمه‌ت به گه‌ل کردن پیروزترین کاره.", translationText:"Through education and knowledge, the nation becomes strong and Kurdistan reaches its goals.", kurdishName:"ئیدریس بارزانی", kurdishHistory:"مێژوونووس و ڕابەری سیاسی", imageUrl:"https://picsum.photos/id/38/800/700?grayscale" },
+        { id:"q4", originalText:"چیاکان ئازادیمانن، نابێ بە هیچ نرخێک واز له خاک بێنین. خه‌بات به‌بێ بیروباوەڕ ڕێگایەکی ونبووە.", translationText:"The mountains are our freedom; we must never surrender the land at any price.", kurdishName:"عوبەیدوڵڵا بارزانی", kurdishHistory:"ڕابەری مێژوویی بارزان", imageUrl:"https://picsum.photos/id/42/800/700?grayscale" }
+      ];
+      currentIndex = 0; resetForm(); refreshUI();
+    }
+  }
+  
+  function requestPinAndUnlock() {
+    const pin = prompt("Enter admin PIN (1474):");
+    if (pin === "1474") {
+      adminUnlocked = true;
+      adminPanelDiv.classList.add('visible');
+      lockStatusBadge.innerHTML = '<i class="fas fa-unlock-alt"></i> Admin Unlocked';
+      renderQuoteList(); refreshUI();
+    } else { if(pin !== null) alert("Incorrect PIN."); adminPanelDiv.classList.remove('visible'); adminUnlocked = false; }
+  }
+  
+  function checkHashAndShowAdmin() {
+    const hash = window.location.hash.toLowerCase();
+    if (hash === '#admin' || hash === '#rashid') { if (!adminUnlocked) requestPinAndUnlock(); else { adminPanelDiv.classList.add('visible'); lockStatusBadge.innerHTML = '<i class="fas fa-unlock-alt"></i> Admin Unlocked'; renderQuoteList(); } }
+    else { adminPanelDiv.classList.remove('visible'); if(!hash) { adminUnlocked = false; lockStatusBadge.innerHTML = '<i class="fas fa-lock"></i> Admin Locked'; resetForm(); } }
+  }
+  
+  addQuoteBtn.addEventListener('click', saveQuoteFromForm);
+  resetDefaultBtn.addEventListener('click', resetToDefault);
+  prevBtn.addEventListener('click', goToPrev);
+  nextBtn.addEventListener('click', goToNext);
+  
+  let touchStart = 0;
+  document.querySelector('.swipe-container').addEventListener('touchstart', e => { touchStart = e.changedTouches[0].screenX; });
+  document.querySelector('.swipe-container').addEventListener('touchend', e => { const diff = e.changedTouches[0].screenX - touchStart; if (Math.abs(diff) > 45) diff > 0 ? goToPrev() : goToNext(); });
+  let mouseStart = 0;
+  document.querySelector('.swipe-container').addEventListener('mousedown', e => { mouseStart = e.clientX; });
+  document.querySelector('.swipe-container').addEventListener('mouseup', e => { const diff = e.clientX - mouseStart; if (Math.abs(diff) > 40) diff > 0 ? goToPrev() : goToNext(); });
+  window.addEventListener('keydown', e => { if(e.key === 'ArrowLeft') goToPrev(); if(e.key === 'ArrowRight') goToNext(); });
+  window.addEventListener('hashchange', checkHashAndShowAdmin);
+  checkHashAndShowAdmin();
+  refreshUI();
+</script>
+</body>
+</html>
