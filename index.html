@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Redirecting to Rashid Farhad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main card container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo / Icon */
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Headline */
+        h1 {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        /* URL display */
+        .url-badge {
+            background: rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #ffd966;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+            font-family: monospace;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 80%;
+            margin: 0 auto 1.5rem auto;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ffd966, #ffb347);
+            border-radius: 50px;
+            animation: loadProgress 2.2s ease-out forwards;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* Redirect text */
+        .redirect-message {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .manual-link {
+            margin-top: 1.2rem;
+        }
+
+        .manual-link a {
+            color: #ffd966;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed rgba(255, 217, 102, 0.5);
+            transition: all 0.3s;
+        }
+
+        .manual-link a:hover {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        /* Countdown text */
+        .countdown {
+            font-weight: 600;
+            color: #ffd966;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            .icon {
+                font-size: 3.5rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <script>
+        // Target URL
+        const TARGET_URL = "https://rashidfarhad.com";
+        let countdown = 3;
+
+        function updateCountdown() {
+            const countdownElement = document.getElementById("countdown-number");
+            if (countdownElement) {
+                countdownElement.textContent = countdown;
+            }
+            if (countdown === 0) {
+                window.location.href = TARGET_URL;
+            } else {
+                countdown--;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        // Fallback: force redirect after max 2.5 seconds regardless
+        setTimeout(() => {
+            window.location.href = TARGET_URL;
+        }, 2500);
+
+        // Start countdown
+        window.addEventListener("load", () => {
+            updateCountdown();
+        });
+    </script>
+</head>
+<body>
+    <!-- Animated background circles -->
+    <div class="bg-animation" id="bg-animation"></div>
+
+    <div class="container">
+        <div class="icon">
+            🚀
+        </div>
+        <h1>Rashid Farhad</h1>
+        <div class="subtitle">Experience creativity & innovation</div>
+        
+        <div class="url-badge">
+            rashidfarhad.com
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="redirect-message">
+            Redirecting you in <span class="countdown" id="countdown-number">3</span> seconds...
+        </div>
+
+        <div class="manual-link">
+            <a href="https://rashidfarhad.com">Click here if redirect doesn't work →</a>
+        </div>
+    </div>
+
+    <script>
+        // Generate floating background circles
+        const bgContainer = document.getElementById("bg-animation");
+        for (let i = 0; i < 30; i++) {
+            const circle = document.createElement("div");
+            circle.classList.add("circle");
+            const size = Math.random() * 100 + 20;
+            circle.style.width = size + "px";
+            circle.style.height = size + "px";
+            circle.style.left = Math.random() * 100 + "%";
+            circle.style.animationDelay = Math.random() * 15 + "s";
+            circle.style.animationDuration = Math.random() * 15 + 10 + "s";
+            bgContainer.appendChild(circle);
+        }
+    </script>
+</body>
+</html>
